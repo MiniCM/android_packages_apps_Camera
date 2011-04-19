@@ -1758,7 +1758,9 @@ public class VideoCamera extends BaseCamera implements
         } else if ("touch".equals(mFocusMode) ||
                 Parameters.FOCUS_MODE_INFINITY.equals(mFocusMode)) {
             setStabilityChangeListener(null);
-            mParameters.setFocusMode(Parameters.FOCUS_MODE_INFINITY);
+            //mParameters.setFocusMode(Parameters.FOCUS_MODE_INFINITY);
+            // Fix for X10 mini. libcamera does not have an 'infinity' mode. Instead we switch to 'auto'
+            mParameters.setFocusMode(Parameters.FOCUS_MODE_AUTO);
         }
         if (oldmode != mFocusMode) {
             focusModeChanged = true;
