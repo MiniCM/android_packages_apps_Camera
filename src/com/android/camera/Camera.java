@@ -560,11 +560,16 @@ public class Camera extends BaseCamera implements View.OnClickListener,
     private final class ShutterCallback
             implements android.hardware.Camera.ShutterCallback {
         public void onShutter() {
+            if (mShutterSound.equals(getString(R.string.pref_camera_shuttersound_entry_disabled))) {
+                mAudioManager = (AudioManager) getSystemService(Context.AUDIO_SERVICE);
+                mAudioManager.setStreamMute ( AudioManager.STREAM_SYSTEM, true );
+            }
             mShutterCallbackTime = System.currentTimeMillis();
             mShutterLag = mShutterCallbackTime - mCaptureStartTime;
             Log.v(TAG, "mShutterLag = " + mShutterLag + "ms");
             clearFocusState();
         }
+        private AudioManager mAudioManager;
     }
 
     private final class PostViewPictureCallback implements PictureCallback {
@@ -574,7 +579,12 @@ public class Camera extends BaseCamera implements View.OnClickListener,
             Log.v(TAG, "mShutterToPostViewCallbackTime = "
                     + (mPostViewPictureCallbackTime - mShutterCallbackTime)
                     + "ms");
+            if (mShutterSound.equals(getString(R.string.pref_camera_shuttersound_entry_disabled))) {
+                mAudioManager = (AudioManager) getSystemService(Context.AUDIO_SERVICE);
+                mAudioManager.setStreamMute ( AudioManager.STREAM_SYSTEM, false );
+            }
         }
+        private AudioManager mAudioManager;
     }
 
     private final class RawPictureCallback implements PictureCallback {
@@ -688,9 +698,11 @@ public class Camera extends BaseCamera implements View.OnClickListener,
             } else if (mFocusState == FOCUSING) {
                 // User is half-pressing the focus key. Play the focus tone.
                 // Do not take the picture now.
-                ToneGenerator tg = mFocusToneGenerator;
-                if (tg != null) {
-                    tg.startTone(ToneGenerator.TONE_PROP_BEEP2);
+                if (!mShutterSound.equals(getString(R.string.pref_camera_shuttersound_entry_disabled))) {
+                    ToneGenerator tg = mFocusToneGenerator;
+                    if (tg != null) {
+                        tg.startTone(ToneGenerator.TONE_PROP_BEEP2);
+                    }
                 }
                 if (focused) {
                     mFocusState = FOCUS_SUCCESS;
@@ -794,7 +806,6 @@ public class Camera extends BaseCamera implements View.OnClickListener,
             if (mCameraDevice == null) {
                 return;
             }
-
             capture();
         }
 
@@ -2152,6 +2163,16 @@ public class Camera extends BaseCamera implements View.OnClickListener,
             mFocusMode = mPreferences.getString(
                     CameraSettings.KEY_FOCUS_MODE,
                     getString(R.string.pref_camera_focusmode_default));
+
+            // Set shutter sound.
+            mShutterSound = mPreferences.getString(
+                    CameraSettings.KEY_SHUTTER_SOUND,
+                    getString(R.string.pref_camera_shuttersound_entry_default));
+
+            // Set capture mode.
+            mCaptureMode = mPreferences.getString(
+                    CameraSettings.KEY_CAPTURE_MODE,
+                    getString(R.string.pref_camera_capturemode_entry_default));
 
             if (isSupported(mFocusMode, mParameters.getSupportedFocusModes())) {
                 mParameters.setFocusMode(mFocusMode);

@@ -48,6 +48,7 @@ public class CameraSettings {
     public static final String KEY_JPEG_QUALITY = "pref_camera_jpegquality_key";
     public static final String KEY_FOCUS_MODE = "pref_camera_focusmode_key";
     public static final String KEY_CAPTURE_MODE = "pref_camera_capturemode_key";
+    public static final String KEY_SHUTTER_SOUND = "pref_camera_shuttersound_key";
     public static final String KEY_FLASH_MODE = "pref_camera_flashmode_key";
     public static final String KEY_VIDEOCAMERA_FLASH_MODE = "pref_camera_video_flashmode_key";
     public static final String KEY_COLOR_EFFECT = "pref_camera_coloreffect_key";
@@ -173,6 +174,7 @@ public class CameraSettings {
         ListPreference sceneMode = group.findPreference(KEY_SCENE_MODE);
         ListPreference flashMode = group.findPreference(KEY_FLASH_MODE);
         ListPreference focusMode = group.findPreference(KEY_FOCUS_MODE);
+        ListPreference shutterSound = group.findPreference(KEY_SHUTTER_SOUND);
         ListPreference exposure = group.findPreference(KEY_EXPOSURE);
         IconListPreference cameraId =
                 (IconListPreference)group.findPreference(KEY_CAMERA_ID);
