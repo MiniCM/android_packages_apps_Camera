@@ -860,6 +860,16 @@ public class VideoCamera extends BaseCamera
                     return true;
                 }
                 break;
+            case KeyEvent.KEYCODE_FOCUS:
+                if (event.getRepeatCount() == 0) {
+                    if (mMediaRecorder != null) {
+                        mMediaRecorder.autoFocusCamera();
+                    } else {
+                        mCameraDevice.autoFocus(null);
+                    }
+                    return true;
+                }
+                break;
             case KeyEvent.KEYCODE_DPAD_CENTER:
                 if (event.getRepeatCount() == 0) {
                     mShutterButton.performClick();
