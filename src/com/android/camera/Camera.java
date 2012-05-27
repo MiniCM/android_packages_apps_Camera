@@ -698,6 +698,7 @@ public class Camera extends BaseCamera implements View.OnClickListener,
             } else if (mFocusState == FOCUSING) {
                 // User is half-pressing the focus key. Play the focus tone.
                 // Do not take the picture now.
+                // TODO: nAa - fix the crash happening at the following line when changing to sports/night and restarting the app and taking snapshot
                 if (!mShutterSound.equals(getString(R.string.pref_camera_shuttersound_entry_disabled))) {
                     ToneGenerator tg = mFocusToneGenerator;
                     if (tg != null) {
